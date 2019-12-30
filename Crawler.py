@@ -13,24 +13,25 @@ def get_a_page(url):
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             print("Done.")
-            return response.text
+            return response.json()
         else:
             return None
     except RequestException as e:
         print (e)
         return None
 
-def parse_a_page(html):
+def parse_a_page(json):
     print("Parse a page……")
     items=[]
-    sp = BeautifulSoup(html,'lxml')
+    result_html = json.get('results_html')
+    sp = BeautifulSoup(result_html, 'lxml')
     attrs = ['data-ds-appid','href','src']
     nodes = sp.findAll('a',attrs={'class':'tab_item'})
     for node in nodes:
         items.append(parse_a_node(node,attrs))
     print("Done.")
+    return items
     #print(items)
-    write_to_file(items)
         
 def parse_a_node(node,attrs):
     item = {}
@@ -52,7 +53,7 @@ def parse_a_node(node,attrs):
 
 def write_to_file(records):
     print("Write to file……")
-    with open('D:/test.csv','w',encoding='utf-8',newline='') as f:
+    with open('D:/test.csv','w',encoding='utf-8-sig',newline='') as f:
         headers = ['data-ds-appid','href','src','discount_pct','discount_original_price','discount_final_price','tab_item_name','vr_required','vr_supported','top_tag']
         writer = csv.DictWriter(f, headers)
         writer.writeheader()
@@ -60,9 +61,17 @@ def write_to_file(records):
         print("Done.")
 
 def main():
-    url = 'https://store.steampowered.com/specials#p=5&tab=TopSellers'
-    html = get_a_page(url)
-    parse_a_page(html)
+    #url = 'https://store.steampowered.com/contenthub/querypaginated/specials/TopSellers/render/?query=&start=0&count=15&cc=US&l=schinese&v=4&tag='
+    items=[]
+    url_base = 'https://store.steampowered.com/contenthub/querypaginated/specials/TopSellers/render/?query=&start='
+    pages = input('Please enter pages you want to get: ')
+    for i in range(int(pages)):
+        url = url_base + str(i*15) + '&count=15&cc=US&l=schinese&v=4&tag='
+        html = get_a_page(url)
+        for item in parse_a_page(html):
+            items.append(item)
+    #print(items)
+    write_to_file(items)
 
 if __name__ == '__main__':
     main()
