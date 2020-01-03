@@ -5,6 +5,7 @@ import time
 from bs4 import BeautifulSoup
 import bs4.element
 import csv
+from game_review import get_review
 
 def get_a_page(url):
     print("Get the page connection……")
@@ -67,9 +68,11 @@ def main():
     pages = input('Please enter pages you want to get: ')
     for i in range(int(pages)):
         url = url_base + str(i*15) + '&count=15&cc=US&l=schinese&v=4&tag='
-        html = get_a_page(url)
-        for item in parse_a_page(html):
+        json = get_a_page(url)
+        for item in parse_a_page(json):
             items.append(item)
+            #print(item.get('href'))
+            get_review(item.get('href'))
     #print(items)
     write_to_file(items)
 
