@@ -81,16 +81,10 @@ def main():
         json = get_a_page(url)
         for item in parse_a_page(json):
             items.append(item)
-<<<<<<< HEAD
             get_review(item.get('href'))
             
 
     # print(items)
-=======
-            #print(item.get('href'))
-            get_review(item.get('href'))
-    #print(items)
->>>>>>> 31e42b1b8b82b259524580b3d61f422888e95273
     write_to_file(items)
     fr = open('test.csv', 'r', encoding='utf-8')
     headers = ['data-ds-appid', 'href', 'src', 'discount_pct', 'discount_original_price', 'discount_final_price',
