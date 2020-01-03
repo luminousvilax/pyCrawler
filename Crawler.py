@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import bs4.element
 import csv
 import storeindatabase
-
+from game_review import get_review
 
 def get_a_page(url):
     print("Get the page connection……")
@@ -31,11 +31,13 @@ def parse_a_page(json):
     sp = BeautifulSoup(result_html, 'lxml')
     attrs = ['data-ds-appid', 'href', 'src']
     nodes = sp.findAll('a', attrs={'class': 'tab_item'})
+    # print(nodes[0]['href'])
     for node in nodes:
+        if 'sub' in node['href']:
+            continue
         items.append(parse_a_node(node, attrs))
     print("Done.")
     return items
-    # print(items)
 
 
 def parse_a_node(node, attrs):
@@ -78,6 +80,8 @@ def main():
         html = get_a_page(url)
         for item in parse_a_page(html):
             items.append(item)
+            get_review(item.get('href'))
+            
 
     # print(items)
     write_to_file(items)

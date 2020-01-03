@@ -25,23 +25,19 @@ def get_review(game_url):
     filename = 'game_review.csv'
     f = open(filename, 'w', encoding='utf-8')
 
-    csv_headers = "Helpful, Recommend, Hours, Posted_Date, Text, User, Game_Number\n"
+    csv_headers = "id, Helpful, Recommend, Hours, Posted_Date, Text, User, Game_Number\n"
     f.write(csv_headers)
 
     offset = 0
 
     while True:
-
-        if offset == 20:
+        offset += 1
+        if offset == 2:
             break
-        game_review_url = 'https://steamcommunity.com/app/' + game_id + '/homecontent/?userreviewsoffset=' + str(
-            10 * (offset - 1)) + '&p=' + str(offset) + \
-                          '&workshopitemspage=' + str(offset) + '&readytouseitemspage=' + str(
-            offset) + '&mtxitemspage=' + str(offset) + '&itemspage=' + str(offset) + \
-                          '&screenshotspage=' + str(offset) + '&videospage=' + str(offset) + '&artpage=' + str(
-            offset) + '&allguidepage=' + str(offset) + '&webguidepage=' + \
-                          str(offset) + '&integratedguidepage=' + str(offset) + '&discussionspage=' + str(
-            offset) + '&numperpage=10&browsefilter=toprated&browsefilter=toprated&appid=433850&appHubSubSection=10&l=schinese&filterLanguage=default&searchText=&forceanon=1'
+        game_review_url = 'https://steamcommunity.com/app/' + game_id + '/homecontent/?userreviewsoffset=' + str(10 * (offset - 1)) + '&p=' + str(offset) + \
+            '&workshopitemspage=' + str(offset) + '&readytouseitemspage=' + str(offset) + '&mtxitemspage=' + str(offset) + '&itemspage=' + str(offset) + \
+            '&screenshotspage=' + str(offset) + '&videospage=' + str(offset) + '&artpage=' + str(offset) + '&allguidepage=' + str(offset) + '&webguidepage=' + \
+            str(offset) + '&integratedguidepage=' + str(offset) + '&discussionspage=' + str(offset) + '&numperpage=10&browsefilter=toprated&browsefilter=toprated&appHubSubSection=10&l=schinese&filterLanguage=default&searchText=&forceanon=1'
         try:
             review_html = requests.get(game_review_url, headers=headers, timeout=10, proxies=proxies).text
         except urllib.error.URLError as e:
@@ -81,12 +77,12 @@ def get_review(game_url):
 
             f.write(found_helpful + ',' + title + ',' + hours + ',' + review_data_posted + \
                     ',' + review_text + ',' + user_name + ',' + game_number + '\n')
-            store_dic = {'helpful': found_helpful, 'recommend': title, 'hour': hours, 'date': review_data_posted,
-                         'text': review_text, 'username': user_name, 'game_id': game_number}
+            store_dic = {'id': game_id,'helpful': found_helpful, 'recommend': title, 'hour': hours, 'date': review_data_posted,
+                         'text': review_text, 'username': user_name, 'game_number': game_number}
             storeindatabase.write_comment(store_dic)
             print(store_dic)
 
-        print("Scrape page:", offset + 1)
-        offset += 1
+        # print("Scrape page:", offset)
+        # print(game_review_url)
 
     f.close()

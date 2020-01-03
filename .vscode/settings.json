@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/Users/tiphereth/anaconda3/envs/ws/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
+}

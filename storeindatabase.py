@@ -26,7 +26,6 @@ def write_comment(comment):
 
 def find_pro(game_id):  # game_name 是字符串，返回值是字典，就是储存的内容。
     result = coll_pro.find_one({'id': str(game_id)})
-    print(result)
     return result
 
 
@@ -42,14 +41,17 @@ def print_result(game_id):
     f = open(filename, 'w', encoding='utf-8')
     proper = find_pro(game_id)
     compound = find_comment(game_id)
-    count = compound['count']
-    comments = compound['comment']
+    count=compound['count']
+    comments=compound['comment']
     f.write(str(proper) + '\n')
     f.write('\n')
     f.write('The number of comments is:' + str(count) + '\n')
     for comment in comments:
+        print(comment)
         f.write(str(comment) + '\n')
     f.close()
+
+
 
 
 def main():
