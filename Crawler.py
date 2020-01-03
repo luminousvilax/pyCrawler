@@ -5,6 +5,7 @@ import time
 from bs4 import BeautifulSoup
 import bs4.element
 import csv
+from game_review import get_review
 import storeindatabase
 from game_review import get_review
 
@@ -76,14 +77,20 @@ def main():
     url_base = 'https://store.steampowered.com/contenthub/querypaginated/specials/TopSellers/render/?query=&start='
     pages = input('Please enter pages you want to get: ')
     for i in range(int(pages)):
-        url = url_base + str(i * 15) + '&count=15&cc=US&l=schinese&v=4&tag='
-        html = get_a_page(url)
-        for item in parse_a_page(html):
+        url = url_base + str(i*15) + '&count=15&cc=US&l=schinese&v=4&tag='
+        json = get_a_page(url)
+        for item in parse_a_page(json):
             items.append(item)
+<<<<<<< HEAD
             get_review(item.get('href'))
             
 
     # print(items)
+=======
+            #print(item.get('href'))
+            get_review(item.get('href'))
+    #print(items)
+>>>>>>> 31e42b1b8b82b259524580b3d61f422888e95273
     write_to_file(items)
     fr = open('test.csv', 'r', encoding='utf-8')
     headers = ['data-ds-appid', 'href', 'src', 'discount_pct', 'discount_original_price', 'discount_final_price',

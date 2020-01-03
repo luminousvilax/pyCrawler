@@ -6,7 +6,6 @@ import socket
 import re
 import storeindatabase
 
-
 def get_review(game_url):
     # game_url = input("Input Game's URL:")
     game_id = re.search('https://store.steampowered.com/app/(.+?)/', game_url)[1]
